@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: mongo
+  name: mongo
+  namespace: ckad-certif
+spec:
+  containers:
+  - image: mongo
+    name: mongo
+    ports:
+    - containerPort: 27017
+    resources: {}
+    env:
+    - name: MONGO_INITDB_ROOT_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: mongocred
+          key: username
+    - name: MONGO_INITDB_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: mongocred
+          key: password
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    run: mongo
+  namespace: ckad-certif
+spec:
+  ports:
+  - port: 27017
+    protocol: TCP
+  selector:
+    run: mongo

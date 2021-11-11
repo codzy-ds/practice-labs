@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    tdv: "ephemeral"
+  creationTimestamp: null
+  name: database-filling
+  namespace: ckad-certif
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      initContainers:
+      - name: helper
+        image: busybox
+        command: ['/bin/sh', '-c', ' wget https://raw.githubusercontent.com/codzy-ds/practice-labs/master/sample_db/exams_bkp -P /mongodata; wget https://raw.githubusercontent.com/codzy-ds/practice-labs/master/sample_db/questions_bkp -P /mongodata;']
+        volumeMounts:
+        - mountPath: /mongodata
+          name: mongo-data
+      containers:
+      - image: mongo
+        name: database-filling
+        command: ['sh', '-c', 'sleep 60;mongoimport --collection=exams mongodb://${MONGO_USERNAME}:${MONGO_PASS}@${MONGO_SERVICE}:27017/kubes-certif?authSource=admin /mongodata/exams_bkp;mongoimport --collection=questions  mongodb://${MONGO_USERNAME}:${MONGO_PASS}@${MONGO_SERVICE}:27017/kubes-certif?authSource=admin /mongodata/questions_bkp;']
+        volumeMounts:
+        - mountPath: /mongodata
+          name: mongo-data
+        env:
+        - name: MONGO_USERNAME
+          valueFrom: 
+            secretKeyRef:
+              name: mongocred
+              key: username
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongocred
+              key: password
+        - name: MONGO_SERVICE
+          value: mongo
+      volumes:
+        - name: mongo-data
+          emptyDir: {}
+      restartPolicy: Never
+status: {}

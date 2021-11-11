@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: practice-labs-api
+  name: practice-labs-api
+  namespace: ckad-certif
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: practice-labs-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: practice-labs-api
+    spec:
+      containers:
+      - image: captwolf/practice-labs:1.0
+        name: practice-labs
+        env:
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongocred
+              key: username 
+        - name: MONGO_PASSWD
+          valueFrom: 
+            secretKeyRef:
+              name: mongocred
+              key: password
+        - name: MONGO_CONNECTION
+          value: mongodb://${MONGO_USER}:${MONGO_PASSWD}@mongo:27017/kubes-certif?authSource=admin
+        ports:
+        - name: http
+          containerPort: 8080
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: practice-labs-api
+  labels:
+    app: practice-labs-api
+  namespace: ckad-certif
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    app: practice-labs-api

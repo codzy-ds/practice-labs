@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: practice-labs-ui
+  name: practice-labs-ui
+  namespace: ckad-certif
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: practice-labs-ui
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: practice-labs-ui
+    spec:
+      containers:
+      - image: captwolf/practice-labs-ui:1.0
+        name: practice-labs
+        env:
+        - name: API_URL
+          value: http://:practice-labs-api:8080
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: practice-labs-ui
+  labels:
+    app: practice-labs-ui
+  namespace: ckad-certif
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    name: http
+    protocol: TCP
+  selector:
+    app: practice-labs-ui
