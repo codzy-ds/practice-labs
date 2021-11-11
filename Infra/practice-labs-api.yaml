@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app: practice-labs-api
-    projet: practice-labs
+    projet: "pratice-labs"
   name: practice-labs-api
   namespace: ckad-certif
 spec:
@@ -18,7 +18,6 @@ spec:
       creationTimestamp: null
       labels:
         app: practice-labs-api
-        projet: practice-labs
     spec:
       affinity:
         podAntiAffinity:
@@ -60,11 +59,13 @@ metadata:
   name: practice-labs-api
   labels:
     app: practice-labs-api
-    projet: practice-labs
+    projet: pratice-labs
   namespace: ckad-certif
 spec:
+  type: NodePort
   ports:
   - port: 8080
     protocol: TCP
+    nodePort: 32396
   selector:
     app: practice-labs-api

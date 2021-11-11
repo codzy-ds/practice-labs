@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app: practice-labs-ui
-    projet: practice-labs
+    projet: "pratice-labs"
   name: practice-labs-ui
   namespace: ckad-certif
 spec:
@@ -24,7 +24,10 @@ spec:
         name: practice-labs
         env:
         - name: API_URL
-          value: http://:practice-labs-api:8080
+          valueFrom:
+            secretKeyRef:
+              name: ips
+              key: nodePortAPI
         resources: {}
 status: {}
 ---
@@ -34,7 +37,7 @@ metadata:
   name: practice-labs-ui
   labels:
     app: practice-labs-ui
-    projet: practice-labs
+    projet: "pratice-labs"
   namespace: ckad-certif
 spec:
   type: LoadBalancer
