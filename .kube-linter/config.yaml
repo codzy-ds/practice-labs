@@ -1,0 +1,10 @@
+customChecks:
+  - name: "required-label-projet"
+    template: "required-label"
+    params:
+      key: "projet"
+    remediation: "Il faut avoir une libellé projet"
+checks:
+  doNotAutoAddDefaults: false
+  include: [ ]
+  exclude: [ "run-as-non-root", "unset-cpu-requirements", "unset-memory-requirements", "no-read-only-root-fs" ]

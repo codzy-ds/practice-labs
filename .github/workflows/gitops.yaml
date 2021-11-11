@@ -22,3 +22,10 @@ jobs:
            Infra/database-filling.yaml
            Infra/practice-labs-api.yaml
            Infra/practice-labs-ui.yaml
+
+    - uses: stackrox/kube-linter-action@v1.0.4
+      with:
+        directory: Infra
+        config: .kube-linter/config.yaml
+        format: plain
+        output-file: kube-linter.log
