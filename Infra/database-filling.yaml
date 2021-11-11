@@ -15,7 +15,7 @@ spec:
       initContainers:
       - name: helper
         image: busybox
-        command: ['/bin/sh', '-c', ' wget https://raw.githubusercontent.com/codzy-ds/practice-labs/task/create-pipeline-compile-node-and-java/sample_db/exams_bkp -P /mongodata; wget https://raw.githubusercontent.com/codzy-ds/practice-labs/task/create-pipeline-compile-node-and-java/sample_db/questions_bkp -P /mongodata;']
+        command: ['/bin/sh', '-c', ' wget https://raw.githubusercontent.com/codzy-ds/practice-labs/master/sample_db/exams_bkp -P /mongodata; wget https://raw.githubusercontent.com/codzy-ds/practice-labs/master/sample_db/questions_bkp -P /mongodata;']
         volumeMounts:
         - mountPath: /mongodata
           name: mongo-data
