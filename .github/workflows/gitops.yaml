@@ -1,0 +1,24 @@
+name: gitops_workflow
+
+on:
+  push:
+    paths:
+      - 'Infra/*'
+
+  workflow_dispatch:
+
+jobs:
+  manifest-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - uses: azure/k8s-lint@v1
+      with:
+        manifests: |
+           Infra/database.yaml
+           Infra/database-filling.yaml
+           Infra/practice-labs-api.yaml
+           Infra/practice-labs-ui.yaml
