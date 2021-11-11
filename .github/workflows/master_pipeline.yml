@@ -1,0 +1,70 @@
+name: Main workflow
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - "Infra/**"
+      - README.md
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - "Infra/**"
+      - README.md
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file practice-labs-api/pom.xml
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - run: |
+          cd practice-labs/
+          npm install
+      - run: |
+          cd practice-labs/
+          npm run build --if-present
+      - run: |
+          export API_URL=http://localhost:8080/
+          cd practice-labs/
+          npm test
+
+  analyze:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["java", "javascript"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
