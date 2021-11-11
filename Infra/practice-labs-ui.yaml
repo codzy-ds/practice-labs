@@ -4,6 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app: practice-labs-ui
+    projet: practice-labs
   name: practice-labs-ui
   namespace: ckad-certif
 spec:
@@ -33,6 +34,7 @@ metadata:
   name: practice-labs-ui
   labels:
     app: practice-labs-ui
+    projet: practice-labs
   namespace: ckad-certif
 spec:
   type: LoadBalancer

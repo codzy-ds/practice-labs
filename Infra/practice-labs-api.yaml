@@ -4,6 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     app: practice-labs-api
+    projet: practice-labs
   name: practice-labs-api
   namespace: ckad-certif
 spec:
@@ -17,7 +18,20 @@ spec:
       creationTimestamp: null
       labels:
         app: practice-labs-api
+        projet: practice-labs
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - practice-labs-api
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - image: captwolf/practice-labs:1.0
         name: practice-labs
@@ -46,6 +60,7 @@ metadata:
   name: practice-labs-api
   labels:
     app: practice-labs-api
+    projet: practice-labs
   namespace: ckad-certif
 spec:
   ports:
